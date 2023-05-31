@@ -1,0 +1,148 @@
+# Tarea2
+---
+title: "Tarea 3 expreciones de datos de cafe"
+format: 
+  html:
+    toc: true
+    lang: es
+---
+
+```{r}
+#| label: bibliotecas
+
+library(tidyverse)
+library(plotly)
+library(DT)
+library(gapminder)
+library(ggthemes)
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+
+## Introducción
+
+Este documento tiene como proposito expresar datos tanto de catación como de cultivo de varias muestras de café proporcionado por <https://github.com/gf0604-procesamientodatosgeograficos/2023-i/blob/main/datos/cqi/coffee-quality.csv>. Esto se representara mediante varios gráficos para poder entender y visualizar caracteristicas del café.
+
+## Histograma del valor total del cafe
+
+```{r}
+#| label: valordelcafe
+#| warning: false
+
+coffee |>
+  readr::read_csv(
+    "https://github.com/gf0604-procesamientodatosgeograficos/2023-i/blob/main/datos/cqi/coffee-quality.csv." 
+    
+  )
+```
+
+```{r}
+#| label: nombre-archivo
+
+file.choose()
+```
+
+```{r}
+#| label: ruta
+
+ruta_csv <-"C:\\Users\\rau7n\\Downloads\\coffee-quality.csv"
+
+```
+
+```{r}
+#| label: rutacafe
+
+
+coffee <- read_csv(ruta_csv)
+```
+
+##Grafico de disperción de total de valoración con la altitud
+
+```{r}
+#| label: puntuación-del-cafe
+```
+
+
+```{r}
+#| label: coffee-valor
+#| warning: false
+
+histograma_ggplot2 <-
+  coffee |>
+  ggplot(aes(x = Altitude, y = Total_Cup_Points)) +
+  geom_point(size = 2) +
+   geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Puntos de valoración dependiendo de la altura") +
+  xlab("Altitud") +
+  ylab("Total de puntos obtenidos") +
+  theme_economist()
+
+ggplotly(histograma_ggplot2, tooltip = "text") |> 
+  config(locale = 'es')
+ 
+  
+
+```
+
+
+
+
+
+```{r}
+#| label: cajas
+#| warning: false
+
+
+grafico_caja_ggplot2 <-
+  coffee |>
+  ggplot(aes(x = Color, y = Total_Cup_Points)) +
+  geom_boxplot() +
+   ggtitle("Mediana y valores del café dependiendo del color") +
+    xlab("Color") +
+  ylab("Puntaje Total") +
+  theme_economist()
+
+# Gráfico de caja plotly
+ggplotly(grafico_caja_ggplot2) |> 
+  config(locale = 'es')
+```
+
+
+
+
+
+```{r}
+#| label: coffee-valor
+#| warning: false
+
+histograma_valortotal_ggplot2 <-
+  coffee |>
+  ggplot(aes(x = Total_Cup_Points)) +
+  geom_histogram(
+    aes(
+      text = paste0(
+        "Distribución de la variable totalde puntaje: $", round(after_stat(x), 2), "\n",
+        "Frecuencia: ", after_stat(count)
+      ),
+      y = after_stat(density)
+        
+    ), 
+    bins = 10
+  ) + 
+  geom_density() +
+   scale_y_continuous(labels = scales::label_comma()) +
+  ggtitle("Distribución de la variable totalde puntaje") +
+  xlab("Puntaje total)") +
+  ylab("Frecuencia") +
+  theme_economist()
+
+ggplotly(histograma_valortotal_ggplot2, tooltip = "text") |> 
+  config(locale = 'es')
+```
+
+
+
+
+
+
